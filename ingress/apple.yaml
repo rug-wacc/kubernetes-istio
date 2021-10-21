@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apple
+  labels:
+    app: apple
+    version: v1
+    pipeline: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apple
+  template:
+    metadata:
+      labels:
+        app: apple
+        version: v1
+        pipeline: test
+    spec:
+      containers:
+      - name: apple
+        image: hashicorp/http-echo
+        args:
+          - "-text=apple"
+        ports:
+        - containerPort: 5678
+
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apple-service
+spec:
+  selector:
+    app: apple
+  ports:
+    - port: 5678 # Default port for image
+
+
+
+
+

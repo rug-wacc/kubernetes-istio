@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server-test
+  labels:
+    app: httpServerTest
+    version: v1
+    pipeline: test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpServerTest
+  template:
+    metadata:
+      labels:
+        app: httpServerTest
+        version: v1
+        pipeline: test
+    spec:
+      containers:
+      - name: httpserver
+        image: httpserver
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 9099
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+
+
+
+
+
+
+
+

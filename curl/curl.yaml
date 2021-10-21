@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl
+  labels:
+    app: curl
+    version: v1
+    pipeline: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curl
+  template:
+    metadata:
+      labels:
+        app: curl
+        version: v1
+        pipeline: test
+    spec:
+      containers:
+      - name: curl
+        image: byrnedo/alpine-curl
+        args:
+        - "http-service:9099/ip"
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+
+
