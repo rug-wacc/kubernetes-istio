@@ -72,7 +72,7 @@ spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: docker.io/istio/examples-bookinfo-details-v1:1.16.2
+        image: docker.io/istio/examples-bookinfo-details-v1:1.16.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -125,7 +125,7 @@ spec:
       serviceAccountName: bookinfo-ratings
       containers:
       - name: ratings
-        image: docker.io/istio/examples-bookinfo-ratings-v1:1.16.2
+        image: docker.io/istio/examples-bookinfo-ratings-v1:1.16.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -178,7 +178,7 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/istio/examples-bookinfo-reviews-v1:1.16.2
+        image: docker.io/istio/examples-bookinfo-reviews-v1:1.16.4
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -220,7 +220,7 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/istio/examples-bookinfo-reviews-v2:1.16.2
+        image: docker.io/istio/examples-bookinfo-reviews-v2:1.16.4
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -262,7 +262,7 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
+        image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.4
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -293,11 +293,8 @@ metadata:
     app: productpage
     service: productpage
 spec:
-  type: NodePort
   ports:
   - port: 9080
-    targetPort: 9080
-    nodePort: 30001
     name: http
   selector:
     app: productpage
@@ -331,7 +328,7 @@ spec:
       serviceAccountName: bookinfo-productpage
       containers:
       - name: productpage
-        image: docker.io/istio/examples-bookinfo-productpage-v1:1.16.2
+        image: docker.io/istio/examples-bookinfo-productpage-v1:1.16.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -344,3 +341,21 @@ spec:
       - name: tmp
         emptyDir: {}
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookinfo-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: productpage
+            port:
+              number: 9080
